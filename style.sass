@@ -1,7 +1,29 @@
+// variables for colors and font
+
+$background-dark: #131313
+$background-grey: #DEDEDE
+$fontcolor-grey: #4B4B4B
+$font: 'Poppins', Verdana sans-serif
+
+// media query mixin
+
+@mixin for-mobile
+	@media only screen and (max-width: 480px)
+		@content
+
+@mixin for-tablet
+	@media only screen and (min-width: 481px) and (max-width: 1024px)
+		@content
+
+// global settings: border-box so that paddings/border are accounted for in element's sizes -> else it would overlap in some cases
+
 *
 	-moz-box-sizing: border-box
 	-webkit-box-sizing: border-box
 	box-sizing: border-box
+	font-family: $font
+
+// center body on screen + max-width for larger resolutions
 
 body
 	margin: 0 auto
@@ -9,34 +31,13 @@ body
 	width: 100%
 	max-width: 1200px
 
-
-
-$background-dark: #131313
-$background-grey: #DEDEDE
-$fontcolor-grey: #4B4B4B
-
-nav
-
-	background-color: $background-dark
-	ul
-		list-style-type: none
-		overflow: hidden
-		li
-			float: left
-			padding: 5px 
-			a
-				display: block
-				text-align: left
-				text-decoration: none
-				color: white
+// header START - 100% width 
 
 #header
-
 
 	#head-logos
 		background-color: #5C1213
 		width: 100%
-		max-width: 1200px
 		display: flex
 		justify-content: space-between
 		padding: 10px 10px 10px 20px
@@ -46,37 +47,78 @@ nav
 			display: block
 			-webkit-box-sizing: border-box
 
-#date
-	text-align: right
+		#fswd-banner
+			@include for-mobile
+				display: none
+
+/*Navbar properties are applied on bother, top and bottom navbar*/
+nav
+	background-color: $background-dark
+	position: relative
+	bottom: 17px
+
+	ul
+		list-style-type: none
+		overflow: hidden
+			// serves to center the navbar://
+		@include for-mobile  
+			display: table
+			margin: 10px auto
+
+		li
+			float: left
+			padding: 5px 
+
+			a
+				display: block
+				text-decoration: none
+				color: white
+				font-family: $font
+				width: 100%
+
+// header end
+
+// main body start -> 95% width and centered so it appears slightly indented
 
 .container
 	width: 95%
 	max-width: 1200px	
-	margin: 0 auto
+	margin: -30px auto 0
 	padding-bottom: 50px
 
+	#date
+		text-align: right
+		margin: -15px 0 0
+	
 	#topnews
-			background-color: $background-grey
-			margin: -15px 0 -10px
+		background-color: $background-grey
+		margin: -15px 0 -10px
 			
-			p
-				color: $fontcolor-grey
-				font-size: 1.5em
-				padding: 5px 10px
+		p
+			color: $fontcolor-grey
+			font-size: 1.5em
+			padding: 0 10px
+
+	// wrapper for flex box magic
 
 	.wrapper
 		width: 100%
 		height: auto
-		overflow: hidden
 		display: flex
-		flex-flow: row
 		justify-content: space-between
-
-
+		flex-wrap: wrap
+		
+		// wrapper for article sections, 85% width - rest is taken by the banner which is flexed in via .wrapper
 		.article-wrapper 
-			width: 82.5%
-			height: 100%
+			width: 85%
+			height: auto
 
+			@include for-mobile
+				width: 100%
+			@include for-tablet
+				width: 100%	
+
+			// article rows
 			.articles
 				position: relative
 				display: flex
@@ -84,114 +126,166 @@ nav
 				flex-wrap: wrap
 				justify-content: space-between
 				width: 100%
-
+				height: 42.5%
+				
 				.image
-					width: 31%
-
-					img
-						width: 100%
-						height: 100%
-						object-fit: cover
-
+					width: 30%
+					height: auto
+					position: relative
+					
+					@include for-mobile
+						width: 45%
+						margin-bottom: 15px		
+					
 					a
-
+						img
+							width: 100%
+						// text positioned over images with absolute positioning
 						.text
-							width: 31%
-							max-height: 80px
+							width: 100%
 							background-color: $background-dark
 							color: white
 							position: absolute
-							bottom: 0%
-							padding-left: 5px
+							bottom: 0
+							padding: 10px 5px
+							margin-bottom: 5px
 
 							p
-								font-size: 1.1em
+								font-size: 0.8em
+								font-weight: bold
 
+								@include for-mobile	
+									font-size: 0.5em
+								@include for-tablet
+									font-size: 0.5em					
+				// small banner that only appears in mobile, is hidden with higher resolutions and has extended properties from the small images
+				.banner-mobile
+					@extend .image
+					display: none
+					@include for-mobile
+						display: flex
+						width: 45%
+						a
+							width: 100%
+				// images used for second section with larger widths and altered .text properties
 				.image-big
-					width: 47%
-					border: 1px solid black
+					width: 47.5%
 					position: relative
+					
 					a
 						img
 							width: 100%
 							object-fit: cover
-
+						
 						.text
 							width: 100%
-							max-height: 80px
+							max-height: 150px
 							background: $background-dark
 							color: white
 							position: absolute
-							bottom: 0%
-							padding-left: 5px
+							bottom: -20%
+							padding: 10px 5px
+							p
+								font-size: 1.5em
+								font-weight: bold
+								@include for-tablet
+									font-size: 1em
+
+					@include for-tablet
+						margin-bottom: 25px	
+
+				// to set a margin between the two rows in the second section
 				.row1
-					margin-bottom: 20px
+					margin-bottom: 100px
+				// second side banner with same properties as first one
+				#sidebanner2
+					@extend .sidebanner1
 
-			#popular
-				@extend #topnews
+		/*extension for extra pages tech/culture/video news with 100% width*/
+		.article-wrapper-other
+			@extend .article-wrapper
+			width: 100%
+			.articles-other
+				@extend .articles				
+				.image-other
+					@extend .image	
+					
+		// Popular News - line: on mobile another similar line is displayed
+		#popular
+			@extend #topnews
+			width: 100%
+			margin-top: 15px
+			margin-bottom: 15px
+
+			@include for-mobile
+				display: none
+		
+		#popular-mobile
+			@extend #topnews
+			@include for-mobile
+				display: block
+
+		.sidebanner1
+			display: flex
+			width: 14%
+			a
 				width: 100%
+				img
+					width: 100%
+					height: auto
+
+			@include for-mobile		
+				display: none
+			@include for-tablet
+				display: none	
+		
+		#horizontalBanner
+			width: 95%
+			margin: 20px auto
+
+			a
+				img
+					width: 100%
+					max-width: 1100px
+
+			@include for-mobile
+				display: none	
+			@include for-tablet
+				margin-top: 40px
+
+// class set for elements that should be hidden in mobile display, while #mobile-wrapper is going to be displayed instead
+
+.mobile-hide
+	@include for-mobile
+		display: none
+
+#mobile-wrapper
+	display: none
+	@include for-mobile
+		display: block
 	
-		#sidebanner1
-			width: 15%
-			height: 100%
-			margin-bottom: -25% //to crop the image
+// Main section END
 
-			img
-				width: 100%
-
-		#sidebanner2
-			width: 15%
-			height: 100%
-			margin-bottom: -20% //to crop the image
-			margin-top: -10%
-
-			img
-				width: 100%
-
-	#horizontalBanner
-		width: 95%
-		margin: 20px auto
-
-		a
-			img
-				width: 100%
-				max-width: 1100px
-
+// Footer section START
 
 #logobottom
 	text-align: right
+	img
+		width: 300px
+		margin-right: 25px
+
+	@include for-mobile
+		text-align: center	
+		margin-right: 0
+		margin-left: 25px
 
 footer
 	background: $background-dark
 	p
 		text-align: center
 		color: white
+		font-weight: bold
+		display: block
 
-@media screen and (max-width: 480px)
-	.wrapper
-		flex-basis: 50%
-		.articles
-			flex-basis: 50%
+// Footer section END		
 
-/*.flexcontainer
-	list-style: none
-	align-items: flex-start
-	flex-direction: row
-	flex-wrap: wrap
-	display: flex
-	
-	li
-		flex-basis: calc(100%/3)
-		position: relative
-		display: flex
-		height: 300px
-
-		div
-			display: relative
-			flex: 1
-			text-align: center
-			display: flex*/
-
-/*			width: 25%
-			max-width: 260px*/
-/*			display: block*/
